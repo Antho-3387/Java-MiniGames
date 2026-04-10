@@ -8,9 +8,10 @@ Le menu principal lance maintenant un jeu Snake complet (nouvelle fenetre JavaFX
 
 ### Fonctionnalites
 
+- Choix du niveau au lancement: `Facile` (sans obstacles) ou `Difficile` (avec obstacles)
 - Deplacement au clavier (`fleches` ou `WASD`)
 - Score qui augmente en mangeant les pommes
-- Collision murs + corps
+- Collision murs + corps + obstacles (mode difficile)
 - Ecran `Game Over`
 - Relance rapide avec la touche `R`
 - Sprites charges depuis `src/main/resources/img/snake`

@@ -15,26 +15,35 @@ import javafx.scene.text.FontWeight;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.Set;
 
 public class SnakeGamePane extends StackPane {
     private static final int CELL_SIZE = 24;
     private static final int GRID_WIDTH = 26;
     private static final int GRID_HEIGHT = 22;
     private static final long TICK_NANOS = 140_000_000L;
+    private static final int OBSTACLE_COUNT = 28;
 
     private final Canvas canvas = new Canvas(GRID_WIDTH * CELL_SIZE, GRID_HEIGHT * CELL_SIZE);
     private final GraphicsContext gc = canvas.getGraphicsContext2D();
     private final Deque<Cell> snake = new ArrayDeque<>();
+    private final Set<Cell> obstacles = new HashSet<>();
     private final Random random = new Random();
+    private final SnakeDifficulty difficulty;
 
     private final Image snakeHead = loadImage("/img/snake/snake_head.png");
     private final Image snakeBody = loadImage("/img/snake/snake_body.png");
     private final Image snakeTail = loadImage("/img/snake/snake_tail.png");
     private final Image apple = loadImage("/img/snake/snake_apple.png");
     private final Image border = loadImage("/img/snake/Snake_border.png");
+    private final Image borderDownLeft = loadImage("/img/snake/Snake_border_down_left.png");
+    private final Image borderDownRight = loadImage("/img/snake/Snake_border_down_right.png");
+    private final Image borderUpLeft = loadImage("/img/snake/Snake_border_up_left.png");
+    private final Image borderUpRight = loadImage("/img/snake/Snake_border_up_right.png");
 
     private Direction direction = Direction.RIGHT;
     private Direction nextDirection = Direction.RIGHT;
@@ -60,6 +69,11 @@ public class SnakeGamePane extends StackPane {
     };
 
     public SnakeGamePane() {
+        this(SnakeDifficulty.HARD);
+    }
+
+    public SnakeGamePane(SnakeDifficulty difficulty) {
+        this.difficulty = difficulty;
         setFocusTraversable(true);
         getChildren().add(canvas);
         initGame();
@@ -89,6 +103,11 @@ public class SnakeGamePane extends StackPane {
         score = 0;
         gameOver = false;
         lastTick = 0L;
+        if (hasObstacles()) {
+            initObstacles();
+        } else {
+            obstacles.clear();
+        }
         food = spawnFood();
         draw();
     }
@@ -105,7 +124,7 @@ public class SnakeGamePane extends StackPane {
         Cell head = snake.peekFirst();
         Cell next = move(head, direction);
 
-        if (isWall(next) || snake.contains(next)) {
+        if (isWall(next) || isObstacle(next) || snake.contains(next)) {
             gameOver = true;
             return;
         }
@@ -143,6 +162,9 @@ public class SnakeGamePane extends StackPane {
 
         drawGrid();
         drawWalls();
+        if (hasObstacles()) {
+            drawObstacles();
+        }
         drawFood();
         drawSnake();
         drawHud();
@@ -181,6 +203,13 @@ public class SnakeGamePane extends StackPane {
         drawImageOrRect(apple, food, Color.web("#ef4444"));
     }
 
+    private void drawObstacles() {
+        for (Cell obstacle : obstacles) {
+            Image tile = getObstacleTile(obstacle);
+            drawImageOrRect(tile, obstacle, Color.web("#64748b"));
+        }
+    }
+
     private void drawSnake() {
         List<Cell> segments = new ArrayList<>(snake);
         for (int i = 0; i < segments.size(); i++) {
@@ -199,6 +228,8 @@ public class SnakeGamePane extends StackPane {
         gc.setFill(Color.WHITE);
         gc.setFont(Font.font("System", FontWeight.BOLD, 20));
         gc.fillText("Score: " + score, 12, 28);
+        gc.setFont(Font.font("System", FontWeight.BOLD, 16));
+        gc.fillText("Niveau: " + difficulty.getLabel(), 12, 50);
         gc.setFont(Font.font("System", 14));
         gc.fillText("Controles: Fleches/WASD - R pour rejouer", 12, canvas.getHeight() - 12);
     }
@@ -246,8 +277,50 @@ public class SnakeGamePane extends StackPane {
             int x = 1 + random.nextInt(GRID_WIDTH - 2);
             int y = 1 + random.nextInt(GRID_HEIGHT - 2);
             candidate = new Cell(x, y);
-        } while (snake.contains(candidate));
+        } while (snake.contains(candidate) || isObstacle(candidate));
         return candidate;
+    }
+
+    private void initObstacles() {
+        obstacles.clear();
+        Cell spawn = snake.peekFirst();
+        while (obstacles.size() < OBSTACLE_COUNT) {
+            int x = 1 + random.nextInt(GRID_WIDTH - 2);
+            int y = 1 + random.nextInt(GRID_HEIGHT - 2);
+            Cell candidate = new Cell(x, y);
+
+            if (snake.contains(candidate)) {
+                continue;
+            }
+
+            // Garde un peu d'espace libre autour du spawn pour eviter une mort immediate.
+            if (Math.abs(candidate.x - spawn.x) + Math.abs(candidate.y - spawn.y) <= 4) {
+                continue;
+            }
+
+            obstacles.add(candidate);
+        }
+    }
+
+    private Image getObstacleTile(Cell cell) {
+        Image[] tiles = {border, borderDownLeft, borderDownRight, borderUpLeft, borderUpRight};
+        int start = Math.floorMod(cell.x * 31 + cell.y * 17, tiles.length);
+
+        for (int i = 0; i < tiles.length; i++) {
+            Image candidate = tiles[(start + i) % tiles.length];
+            if (candidate != null) {
+                return candidate;
+            }
+        }
+        return border;
+    }
+
+    private boolean hasObstacles() {
+        return difficulty == SnakeDifficulty.HARD;
+    }
+
+    private boolean isObstacle(Cell cell) {
+        return hasObstacles() && obstacles.contains(cell);
     }
 
     private boolean isOpposite(Direction first, Direction second) {

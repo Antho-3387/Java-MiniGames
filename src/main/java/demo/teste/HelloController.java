@@ -1,11 +1,14 @@
 package demo.teste;
 
 import demo.teste.snake.SnakeGameLauncher;
+import demo.teste.snake.SnakeDifficulty;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+
+import java.util.Optional;
 
 public class HelloController {
 
@@ -19,8 +22,12 @@ public class HelloController {
 
         switch (gameName) {
             case "Jeu du Snake" -> {
-                welcomeText.setText("Snake lance. Bon jeu !");
-                SnakeGameLauncher.openWindow();
+                Optional<SnakeDifficulty> difficulty = SnakeGameLauncher.openWindowWithDifficultyPrompt();
+                if (difficulty.isPresent()) {
+                    welcomeText.setText("Snake " + difficulty.get().getLabel().toLowerCase() + " lance. Bon jeu !");
+                } else {
+                    welcomeText.setText("Lancement du Snake annule.");
+                }
             }
             case "Jeu du vrai ou faux" -> welcomeText.setText("Preparation du Quiz...");
             case "Jeu du Memory" -> welcomeText.setText("Mise en place des cartes...");
