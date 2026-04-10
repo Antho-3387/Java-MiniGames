@@ -3,14 +3,36 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
-
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.text.Font?>
+
 <VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="demo.teste.HelloController">
+      fx:controller="demo.teste.HelloController"
+      style="-fx-background-color: #2c3e50;">
+
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
 
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
+    <Label text="MiniGames" textFill="WHITE">
+        <font>
+            <Font name="System Bold" size="24.0" />
+        </font>
+    </Label>
+
+    <Label fx:id="welcomeText" textFill="#90EE90" />
+
+
+    <Button text="Jeu du Snake"
+            onAction="#onStartGameClick"
+            style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-cursor: hand; -fx-font-weight: bold; -fx-min-width: 200px; -fx-min-height: 50px;"/>
+
+    <Button text="Jeu du vrai ou faux"
+            onAction="#onStartGameClick"
+            style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-cursor: hand; -fx-font-weight: bold;  -fx-min-width: 200px; -fx-min-height: 50px;"/>
+
+    <Button text="Jeu du Memory"
+            onAction="#onStartGameClick"
+            style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-cursor: hand; -fx-font-weight: bold;  -fx-min-width: 200px; -fx-min-height: 50px;"/>
+
 </VBox>
