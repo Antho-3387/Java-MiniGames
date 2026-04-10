@@ -5,4 +5,5 @@ module demo.teste {
 
     opens demo.teste to javafx.fxml;
     exports demo.teste;
+    exports demo.teste.snake;
 }
