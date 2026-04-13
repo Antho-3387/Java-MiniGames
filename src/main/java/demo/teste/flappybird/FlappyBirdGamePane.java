@@ -43,8 +43,8 @@ public class FlappyBirdGamePane extends StackPane {
     private final Image birdFrame1 = loadImage("/img/flappybird/Bird_Frame_01.png");
     private final Image birdFrame2 = loadImage("/img/flappybird/Bird_Frame_02.png");
     private final Image birdFrame3 = loadImage("/img/flappybird/Bird_Frame_03.png");
-    private final Image pipeDown = loadImage("/img/flappybird/Pipe_Down.png");
-    private final Image pipeUp = loadImage("/img/flappybird/Pipe_Up.png");
+    private final Image pipeDown = loadImage("/img/flappybird/Pipe_Up.png");
+    private final Image pipeUp = loadImage("/img/flappybird/Pipe_Down.png");
 
     private double birdY;
     private double birdVelocity;
