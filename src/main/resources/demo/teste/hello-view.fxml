@@ -27,6 +27,10 @@
             onAction="#onStartGameClick"
             style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-cursor: hand; -fx-font-weight: bold; -fx-min-width: 200px; -fx-min-height: 50px;"/>
 
+    <Button text="Flappy Bird"
+            onAction="#onStartGameClick"
+            style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-cursor: hand; -fx-font-weight: bold; -fx-min-width: 200px; -fx-min-height: 50px;"/>
+
     <Button text="Jeu du vrai ou faux"
             onAction="#onStartGameClick"
             style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-cursor: hand; -fx-font-weight: bold;  -fx-min-width: 200px; -fx-min-height: 50px;"/>
