@@ -142,9 +142,9 @@ public class SnakeGamePane extends StackPane {
     private void handleKey(KeyEvent event) {
         KeyCode key = event.getCode();
         switch (key) {
-            case UP, W -> nextDirection = Direction.UP;
+            case UP, Z -> nextDirection = Direction.UP;
             case DOWN, S -> nextDirection = Direction.DOWN;
-            case LEFT, A -> nextDirection = Direction.LEFT;
+            case LEFT, Q -> nextDirection = Direction.LEFT;
             case RIGHT, D -> nextDirection = Direction.RIGHT;
             case R -> {
                 if (gameOver) {
