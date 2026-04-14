@@ -37,6 +37,7 @@ public class TrueOrFalseGamePane extends StackPane {
     private final PauseTransition nextQuestionDelay = new PauseTransition(NEXT_QUESTION_DELAY);
     private final LocalBestScoreManager scoreManager =
             new LocalBestScoreManager("trueorfalse-best-score.txt", "TrueOrFalseScoreManager");
+    private final TrueOrFalseQuestionRepository questionRepository = new TrueOrFalseQuestionRepository();
 
     private int currentQuestionIndex;
     private int score;
@@ -130,16 +131,10 @@ public class TrueOrFalseGamePane extends StackPane {
     public void initialiserQuestions() {
         questions.clear();
 
-        questions.add(new Question("La Terre est plate", false));
-        questions.add(new Question("2 + 2 = 4", true));
-        questions.add(new Question("Java est un langage compilé", true));
-        questions.add(new Question("Un PC peut fonctionner sans RAM", false));
-        questions.add(new Question("Le ciel est bleu", true));
-        questions.add(new Question("Un carré a 5 côtés", false));
-        questions.add(new Question("Le JavaFX sert à faire des interfaces", true));
-        questions.add(new Question("Un poisson peut respirer hors de l'eau", false));
-        questions.add(new Question("Pierre est gay", true));
-        questions.add(new Question("Emery n'est pas sérieux", true));
+        List<TrueOrFalseQuestionRepository.QuestionData> loadedQuestions = questionRepository.loadQuestions();
+        for (TrueOrFalseQuestionRepository.QuestionData loadedQuestion : loadedQuestions) {
+            questions.add(new Question(loadedQuestion.texte(), loadedQuestion.reponse()));
+        }
     }
 
     private void startNewGame() {
