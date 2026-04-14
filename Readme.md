@@ -29,6 +29,19 @@ Le menu principal permet aussi de lancer un Flappy Bird jouable dans une nouvell
 - Relance avec `R` ou un clic
 - Sprites charges depuis `src/main/resources/img/flappybird`
 
+### Vrai ou Faux
+
+Le menu principal permet aussi de lancer un quiz Vrai ou Faux dans une nouvelle fenetre JavaFX.
+
+#### Fonctionnalites
+
+- Reponses avec les boutons `Vrai` et `Faux`
+- Raccourcis clavier (`V`, `F`, `Enter`)
+- Score qui augmente de `10` par bonne reponse
+- Progression question par question
+- Ecran de fin avec score final
+- Rejouer avec le bouton `Rejouer` ou la touche `R`
+
 ## Structure utile
 
 - `src/main/java/demo/teste/HelloController.java` : boutons menu -> lancement Snake / Flappy Bird
@@ -38,6 +51,9 @@ Le menu principal permet aussi de lancer un Flappy Bird jouable dans une nouvell
 - `src/main/java/demo/teste/flappybird/FlappyBirdGamePane.java` : boucle et rendu du Flappy Bird
 - `src/main/java/demo/teste/flappybird/FlappyBirdGameLauncher.java` : ouverture du jeu depuis le menu
 - `src/main/java/demo/teste/flappybird/FlappyBirdStandaloneApplication.java` : runner standalone
+- `src/main/java/demo/teste/trueorfalse/TrueOrFalseGamePane.java` : logique du quiz Vrai ou Faux
+- `src/main/java/demo/teste/trueorfalse/TrueOrFalseGameLauncher.java` : ouverture du quiz depuis le menu
+- `src/main/java/demo/teste/trueorfalse/TrueOrFalseStandaloneApplication.java` : runner standalone
 
 ## Lancer le projet
 
@@ -46,6 +62,7 @@ Depuis IntelliJ :
 1. Ouvrir `demo.teste.Launcher`
 2. Cliquer sur **Jeu du Snake**
 3. Cliquer sur **Flappy Bird**
+4. Cliquer sur **Jeu du vrai ou faux**
 
 Option Maven (si Maven est installe localement) :
 
@@ -56,4 +73,7 @@ Pour lancer Snake directement, definir temporairement la classe principale JavaF
 
 Pour lancer Flappy Bird directement, definir temporairement la classe principale JavaFX sur
 `demo.teste.flappybird.FlappyBirdStandaloneApplication` dans la configuration d'execution.
+
+Pour lancer Vrai ou Faux directement, definir temporairement la classe principale JavaFX sur
+`demo.teste.trueorfalse.TrueOrFalseStandaloneApplication` dans la configuration d'execution.
 

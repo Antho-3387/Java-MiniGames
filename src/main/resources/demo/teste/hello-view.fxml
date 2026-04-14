@@ -31,12 +31,12 @@
             onAction="#onStartGameClick"
             style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-cursor: hand; -fx-font-weight: bold; -fx-min-width: 200px; -fx-min-height: 50px;"/>
 
+    <Button text="Road Rush"
+            onAction="#onStartGameClick"
+            style="-fx-background-color: #f59e0b; -fx-text-fill: white; -fx-cursor: hand; -fx-font-weight: bold; -fx-min-width: 200px; -fx-min-height: 50px;"/>
+
     <Button text="Jeu du vrai ou faux"
             onAction="#onStartGameClick"
-            style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-cursor: hand; -fx-font-weight: bold;  -fx-min-width: 200px; -fx-min-height: 50px;"/>
-
-    <Button text="Jeu du Memory"
-            onAction="#onStartGameClick"
-            style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-cursor: hand; -fx-font-weight: bold;  -fx-min-width: 200px; -fx-min-height: 50px;"/>
+            style="-fx-background-color: #d51818; -fx-text-fill: white; -fx-cursor: hand; -fx-font-weight: bold;  -fx-min-width: 200px; -fx-min-height: 50px;"/>
 
 </VBox>

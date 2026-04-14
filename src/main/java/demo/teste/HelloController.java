@@ -1,6 +1,8 @@
 package demo.teste;
 
 import demo.teste.flappybird.FlappyBirdGameLauncher;
+import demo.teste.roadrush.RoadRushGameLauncher;
+import demo.teste.trueorfalse.TrueOrFalseGameLauncher;
 import demo.teste.snake.SnakeGameLauncher;
 import demo.teste.snake.SnakeDifficulty;
 import javafx.application.Platform;
@@ -34,9 +36,14 @@ public class HelloController {
                 FlappyBirdGameLauncher.openWindow();
                 welcomeText.setText("Flappy Bird lance. Bon jeu !");
             }
-            case "Jeu du vrai ou faux" -> welcomeText.setText("Preparation du Quiz...");
-            case "Jeu du Memory" -> welcomeText.setText("Mise en place des cartes...");
-            default -> welcomeText.setText("Chargement du jeu...");
+            case "Road Rush" -> {
+                RoadRushGameLauncher.openWindow();
+                welcomeText.setText("Road Rush lance. Bonne route !");
+            }
+            case "Jeu du vrai ou faux" -> {
+                TrueOrFalseGameLauncher.openWindow();
+                welcomeText.setText("Vrai ou Faux lance. Bonne chance !");
+            }
         }
 
         System.out.println("Action detectee : " + gameName);
