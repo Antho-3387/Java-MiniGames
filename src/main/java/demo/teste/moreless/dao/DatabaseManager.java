@@ -2,17 +2,37 @@ package demo.teste.moreless.dao;
 
 import demo.teste.moreless.model.Produit;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
+import java.util.logging.Logger;
 
 public class DatabaseManager {
 
-    private static final String URL = "jdbc:sqlite:justeprix.db";
+    private static final String DB_PATH_PROPERTY = "moreless.db.path";
+    private static final Path DB_PATH = resolveDatabasePath();
+    private static final String URL = "jdbc:sqlite:" + DB_PATH.toAbsolutePath();
+
+    private static volatile boolean driverLoaded;
+    private static volatile boolean initialized;
+    private static volatile String lastError = "";
 
     public static void init() {
+        if (initialized) {
+            return;
+        }
+
+        if (!ensureDriverLoaded()) {
+            return;
+        }
+
         try (Connection conn = DriverManager.getConnection(URL);
              Statement stmt = conn.createStatement()) {
+
+            System.out.println("[MoreLess] Base utilisee: " + DB_PATH.toAbsolutePath());
 
             stmt.execute("""
                 CREATE TABLE IF NOT EXISTS produits (
@@ -29,9 +49,115 @@ public class DatabaseManager {
                 seed(conn);
             }
 
+            ResultSet countRs = stmt.executeQuery("SELECT COUNT(*) FROM produits");
+            if (countRs.next()) {
+                System.out.println("[MoreLess] Produits disponibles: " + countRs.getInt(1));
+            }
+            initialized = true;
+            lastError = "";
+
         } catch (SQLException e) {
+            lastError = e.getMessage();
             System.err.println("DatabaseManager.init() : " + e.getMessage());
         }
+    }
+
+    private static boolean ensureDriverLoaded() {
+        if (driverLoaded) {
+            return true;
+        }
+
+        try {
+            loadAndRegisterSqliteDriver();
+            driverLoaded = true;
+            return true;
+        } catch (Exception e) {
+            lastError = e.getMessage();
+            System.err.println("[MoreLess] Driver SQLite introuvable: verifie la dependance Maven sqlite-jdbc et le module-info.");
+            System.err.println("[MoreLess] Detail driver: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public static String getDebugInfo() {
+        return "DB=" + DB_PATH.toAbsolutePath() + (lastError.isBlank() ? "" : " | erreur=" + lastError);
+    }
+
+    private static void loadAndRegisterSqliteDriver() throws Exception {
+        try {
+            Class<?> driverClass = Class.forName("org.sqlite.JDBC");
+            Driver driver = (Driver) driverClass.getDeclaredConstructor().newInstance();
+            DriverManager.registerDriver(new DriverShim(driver));
+            return;
+        } catch (ClassNotFoundException ignored) {
+            // Tentative 2 via le classloader de contexte (utile selon l'environnement de lancement)
+        }
+
+        ClassLoader contextLoader = Thread.currentThread().getContextClassLoader();
+        Class<?> driverClass = Class.forName("org.sqlite.JDBC", true, contextLoader);
+        Driver driver = (Driver) driverClass.getDeclaredConstructor().newInstance();
+        DriverManager.registerDriver(new DriverShim(driver));
+    }
+
+    private static final class DriverShim implements Driver {
+        private final Driver delegate;
+
+        private DriverShim(Driver delegate) {
+            this.delegate = delegate;
+        }
+
+        @Override
+        public Connection connect(String url, Properties info) throws SQLException {
+            return delegate.connect(url, info);
+        }
+
+        @Override
+        public boolean acceptsURL(String url) throws SQLException {
+            return delegate.acceptsURL(url);
+        }
+
+        @Override
+        public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
+            return delegate.getPropertyInfo(url, info);
+        }
+
+        @Override
+        public int getMajorVersion() {
+            return delegate.getMajorVersion();
+        }
+
+        @Override
+        public int getMinorVersion() {
+            return delegate.getMinorVersion();
+        }
+
+        @Override
+        public boolean jdbcCompliant() {
+            return delegate.jdbcCompliant();
+        }
+
+        @Override
+        public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+            return delegate.getParentLogger();
+        }
+    }
+
+    private static Path resolveDatabasePath() {
+        String configured = System.getProperty(DB_PATH_PROPERTY, "").trim();
+        if (!configured.isEmpty()) {
+            return Path.of(configured);
+        }
+
+        Path current = Path.of("").toAbsolutePath();
+        while (current != null) {
+            Path candidate = current.resolve("justeprix.db");
+            if (Files.exists(candidate)) {
+                return candidate;
+            }
+            current = current.getParent();
+        }
+
+        return Path.of("").toAbsolutePath().resolve("justeprix.db");
     }
 
     private static void seed(Connection conn) throws SQLException {
@@ -175,6 +301,10 @@ public class DatabaseManager {
     }
 
     public static List<Produit> findAll() {
+        init();
+        if (!initialized) {
+            return new ArrayList<>();
+        }
         List<Produit> list = new ArrayList<>();
         String sql = "SELECT id, nom, prix, image_path, categorie FROM produits ORDER BY id";
         try (Connection conn = DriverManager.getConnection(URL);
@@ -182,24 +312,34 @@ public class DatabaseManager {
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) list.add(map(rs));
         } catch (SQLException e) {
+            lastError = e.getMessage();
             System.err.println("DatabaseManager.findAll() : " + e.getMessage());
         }
         return list;
     }
 
     public static Produit findRandom() {
+        init();
+        if (!initialized) {
+            return null;
+        }
         String sql = "SELECT id, nom, prix, image_path, categorie FROM produits ORDER BY RANDOM() LIMIT 1";
         try (Connection conn = DriverManager.getConnection(URL);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             if (rs.next()) return map(rs);
         } catch (SQLException e) {
+            lastError = e.getMessage();
             System.err.println("DatabaseManager.findRandom() : " + e.getMessage());
         }
         return null;
     }
 
     public static void insert(Produit p) {
+        init();
+        if (!initialized) {
+            return;
+        }
         String sql = "INSERT INTO produits (nom, prix, image_path, categorie) VALUES (?, ?, ?, ?)";
         try (Connection conn = DriverManager.getConnection(URL);
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -214,6 +354,10 @@ public class DatabaseManager {
     }
 
     public static void update(Produit p) {
+        init();
+        if (!initialized) {
+            return;
+        }
         String sql = "UPDATE produits SET nom=?, prix=?, image_path=?, categorie=? WHERE id=?";
         try (Connection conn = DriverManager.getConnection(URL);
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -229,6 +373,10 @@ public class DatabaseManager {
     }
 
     public static void delete(int id) {
+        init();
+        if (!initialized) {
+            return;
+        }
         String sql = "DELETE FROM produits WHERE id=?";
         try (Connection conn = DriverManager.getConnection(URL);
              PreparedStatement ps = conn.prepareStatement(sql)) {

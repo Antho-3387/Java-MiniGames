@@ -83,6 +83,7 @@ public class GameController implements Initializable {
             categoryLabel.setText("");
             productImageView.setImage(null);
             hintLabel.setText("Ajoutez des produits via ADMIN");
+            resultLabel.setText(DatabaseManager.getDebugInfo());
             priceField.setDisable(true);
             validateBtn.setDisable(true);
             stopTimer();
