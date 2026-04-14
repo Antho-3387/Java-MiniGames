@@ -1,6 +1,7 @@
 package demo.teste;
 
 import demo.teste.flappybird.FlappyBirdGameLauncher;
+import demo.teste.moreless.MoreLessGameLauncher;
 import demo.teste.roadrush.RoadRushGameLauncher;
 import demo.teste.trueorfalse.TrueOrFalseGameLauncher;
 import demo.teste.snake.SnakeGameLauncher;
@@ -39,6 +40,10 @@ public class HelloController {
             case "Road Rush" -> {
                 RoadRushGameLauncher.openWindow();
                 welcomeText.setText("Road Rush lance. Bonne route !");
+            }
+            case "Le Juste Prix" -> {
+                MoreLessGameLauncher.launch();
+                welcomeText.setText("Le Juste Prix lance. Bon jeu !");
             }
             case "Jeu du vrai ou faux" -> {
                 TrueOrFalseGameLauncher.openWindow();

@@ -35,6 +35,10 @@
             onAction="#onStartGameClick"
             style="-fx-background-color: #f59e0b; -fx-text-fill: white; -fx-cursor: hand; -fx-font-weight: bold; -fx-min-width: 200px; -fx-min-height: 50px;"/>
 
+    <Button text="Le Juste Prix"
+            onAction="#onStartGameClick"
+            style="-fx-background-color: #9B30FF; -fx-text-fill: #FFB800; -fx-cursor: hand; -fx-font-weight: bold; -fx-min-width: 200px; -fx-min-height: 50px;"/>
+
     <Button text="Jeu du vrai ou faux"
             onAction="#onStartGameClick"
             style="-fx-background-color: #d51818; -fx-text-fill: white; -fx-cursor: hand; -fx-font-weight: bold;  -fx-min-width: 200px; -fx-min-height: 50px;"/>
