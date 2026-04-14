@@ -22,6 +22,16 @@
             <version>${javafx.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.45.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-nop</artifactId>
+            <version>1.7.36</version>
+        </dependency>
+        <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>
@@ -45,6 +55,9 @@
                 <version>0.0.8</version>
                 <configuration>
                     <mainClass>demo.teste/demo.teste.Launcher</mainClass>
+                    <options>
+                        <option>--enable-native-access=javafx.graphics,org.xerial.sqlitejdbc</option>
+                    </options>
                 </configuration>
             </plugin>
         </plugins>

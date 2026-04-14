@@ -1,0 +1,241 @@
+/* ============================================================
+   Juste Prix — Thème violet & or
+   ============================================================ */
+
+/* ---------- Écran principal ---------- */
+.root-pane {
+    -fx-background-color: #2A0055;
+}
+
+.dark-overlay {
+    -fx-background-color: rgba(0, 0, 0, 0.50);
+}
+
+.title-label {
+    -fx-text-fill: #FFB800;
+    -fx-font-size: 38px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, #9B30FF, 18, 0.6, 0, 0);
+}
+
+.hud-label {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+/* ---------- Écran TV ---------- */
+/*
+ * Bordure simulée via background layers avec insets négatifs (-4px).
+ * Aucun -fx-border → aucun inset → zone de layout = exactement 480×320.
+ * Couche 1 (glow, -6px) → Couche 2 (or, -4px) → Couche 3 (fond sombre, 0)
+ */
+.tv-frame {
+    -fx-background-color: rgba(255, 184, 0, 0.35), #FFB800, #111111;
+    -fx-background-insets: -8, -4, 0;
+    -fx-background-radius: 12, 8, 0;
+    -fx-effect: dropshadow(gaussian, #FFB800, 22, 0.5, 0, 0);
+}
+
+.green-screen {
+    -fx-background-color: #00B800;
+}
+
+.screen-overlay {
+    -fx-background-color: transparent;
+}
+
+.screen-info-box {
+    -fx-background-color: transparent;
+}
+
+.product-name-label {
+    -fx-text-fill: white;
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+    -fx-background-color: rgba(0, 0, 0, 0.65);
+    -fx-padding: 4 10 4 10;
+}
+
+.category-label {
+    -fx-text-fill: #FFB800;
+    -fx-font-size: 13px;
+    -fx-background-color: rgba(0, 0, 0, 0.65);
+    -fx-padding: 2 10 5 10;
+}
+
+/* ---------- Feedback ---------- */
+.hint-label {
+    -fx-text-fill: #9B30FF;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, #5A00AA, 8, 0.4, 0, 0);
+}
+
+.result-label {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+}
+
+/* ---------- Saisie ---------- */
+.price-field {
+    -fx-background-color: #1A0033;
+    -fx-text-fill: #FFB800;
+    -fx-prompt-text-fill: rgba(255, 184, 0, 0.45);
+    -fx-border-color: #FFB800;
+    -fx-border-width: 2;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-font-size: 18px;
+}
+
+/* ---------- Boutons jeu ---------- */
+.btn-gold {
+    -fx-background-color: #FFB800;
+    -fx-text-fill: #2A0055;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 8 22 8 22;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+.btn-gold:hover { -fx-background-color: #FFC933; }
+.btn-gold:pressed { -fx-background-color: #E0A000; }
+
+.btn-purple {
+    -fx-background-color: #5A00AA;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 8 22 8 22;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+.btn-purple:hover { -fx-background-color: #7B00CC; }
+
+.btn-admin {
+    -fx-background-color: #2A0055;
+    -fx-text-fill: #FFB800;
+    -fx-border-color: #FFB800;
+    -fx-border-width: 2;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 8 22 8 22;
+    -fx-cursor: hand;
+}
+.btn-admin:hover { -fx-background-color: #3D007A; }
+
+/* ---------- Panel admin ---------- */
+.admin-root {
+    -fx-background-color: #1A0033;
+}
+
+.admin-title {
+    -fx-text-fill: #FFB800;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+.admin-table {
+    -fx-background-color: #1A0033;
+    -fx-control-inner-background: #2A0055;
+    -fx-control-inner-background-alt: #220044;
+    -fx-border-color: #5A00AA;
+    -fx-border-width: 1;
+}
+
+.admin-table .column-header-background {
+    -fx-background-color: #5A00AA;
+}
+
+.admin-table .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.admin-table .table-row-cell {
+    -fx-border-color: transparent;
+}
+
+.admin-table .table-cell {
+    -fx-text-fill: white;
+}
+
+.admin-table .table-row-cell:selected .table-cell {
+    -fx-text-fill: #FFB800;
+    -fx-background-color: #3D007A;
+}
+
+.admin-form {
+    -fx-background-color: #2A0055;
+    -fx-padding: 14;
+}
+
+.form-label {
+    -fx-text-fill: #9B30FF;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.form-field {
+    -fx-background-color: #1A0033;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: rgba(255,255,255,0.35);
+    -fx-border-color: #5A00AA;
+    -fx-border-width: 1;
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
+}
+
+.btn-add {
+    -fx-background-color: #2D7A2D;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+.btn-add:hover { -fx-background-color: #3A9A3A; }
+
+.btn-edit {
+    -fx-background-color: #FFB800;
+    -fx-text-fill: #2A0055;
+    -fx-font-weight: bold;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+.btn-edit:hover { -fx-background-color: #FFC933; }
+
+.btn-delete {
+    -fx-background-color: #AA0000;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+.btn-delete:hover { -fx-background-color: #CC1111; }
+
+.btn-close {
+    -fx-background-color: #444444;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+.btn-close:hover { -fx-background-color: #555555; }
+
+.btn-browse {
+    -fx-background-color: #5A00AA;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-background-radius: 3;
+}
+.btn-browse:hover { -fx-background-color: #7B00CC; }
+
+.status-label {
+    -fx-text-fill: #9B30FF;
+    -fx-font-size: 12px;
+    -fx-padding: 4 0 0 0;
+}

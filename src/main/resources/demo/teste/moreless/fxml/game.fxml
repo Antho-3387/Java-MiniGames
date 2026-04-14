@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.ImageView?>
+<?import java.net.URL?>
+
+<StackPane xmlns="http://javafx.com/javafx/21"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="demo.teste.moreless.controller.GameController"
+           fx:id="rootPane"
+           prefWidth="1280" prefHeight="720"
+           styleClass="root-pane">
+
+    <stylesheets>
+        <URL value="@../css/style.css"/>
+    </stylesheets>
+
+    <!-- Fond -->
+    <ImageView fx:id="backgroundView"
+               fitWidth="1280" fitHeight="720"
+               preserveRatio="false"
+               mouseTransparent="true"/>
+
+    <!-- Voile sombre -->
+    <Pane styleClass="dark-overlay" mouseTransparent="true"/>
+
+    <!-- Contenu principal centré -->
+    <VBox alignment="CENTER" spacing="12" maxWidth="720">
+
+        <!-- Titre -->
+        <Label text="LE JUSTE PRIX" styleClass="title-label"/>
+
+        <!-- HUD -->
+        <HBox alignment="CENTER" spacing="60">
+            <Label fx:id="scoreLabel"    text="Score : 0"    styleClass="hud-label"/>
+            <Label fx:id="attemptsLabel" text="Essais : 5/5" styleClass="hud-label"/>
+            <Label fx:id="timerLabel"    text="Temps : 0s"   styleClass="hud-label"/>
+        </HBox>
+
+        <!-- Écran TV (maxWidth=prefWidth = taille fixe 480×320, pas d'étirement par VBox) -->
+        <StackPane styleClass="tv-frame"
+                   prefWidth="480" prefHeight="320"
+                   maxWidth="480"  maxHeight="320">
+            <Pane styleClass="green-screen"/>
+            <ImageView fx:id="productImageView"
+                       fitWidth="480" fitHeight="320"
+                       preserveRatio="false"/>
+            <Pane fx:id="screenOverlay" styleClass="screen-overlay"/>
+            <VBox alignment="BOTTOM_CENTER" styleClass="screen-info-box">
+                <Label fx:id="productNameLabel" text="" styleClass="product-name-label"/>
+                <Label fx:id="categoryLabel"    text="" styleClass="category-label"/>
+            </VBox>
+        </StackPane>
+
+        <!-- Indice température -->
+        <Label fx:id="hintLabel" text="" styleClass="hint-label"/>
+
+        <!-- Résultat -->
+        <Label fx:id="resultLabel" text="" styleClass="result-label"/>
+
+        <!-- Saisie du prix -->
+        <HBox alignment="CENTER" spacing="10">
+            <Label text="€" styleClass="hud-label"/>
+            <TextField fx:id="priceField"
+                       styleClass="price-field"
+                       promptText="Votre prix..."
+                       prefWidth="200" prefHeight="40"/>
+            <Button fx:id="validateBtn"
+                    text="VALIDER"
+                    styleClass="btn-gold"
+                    onAction="#handleValidate"/>
+        </HBox>
+
+        <!-- Boutons du bas -->
+        <HBox alignment="CENTER" spacing="20">
+            <Button text="NOUVEAU PRODUIT" styleClass="btn-purple" onAction="#startNewGame"/>
+            <Button text="ADMIN"           styleClass="btn-admin"  onAction="#openAdmin"/>
+        </HBox>
+
+    </VBox>
+</StackPane>

@@ -1,6 +1,7 @@
 package demo.teste;
 
 import demo.teste.flappybird.FlappyBirdGameLauncher;
+import demo.teste.moreless.MoreLessGameLauncher;
 import demo.teste.snake.SnakeGameLauncher;
 import demo.teste.snake.SnakeDifficulty;
 import javafx.application.Platform;
@@ -33,6 +34,10 @@ public class HelloController {
             case "Flappy Bird" -> {
                 FlappyBirdGameLauncher.openWindow();
                 welcomeText.setText("Flappy Bird lance. Bon jeu !");
+            }
+            case "Le Juste Prix" -> {
+                MoreLessGameLauncher.launch();
+                welcomeText.setText("Le Juste Prix lance. Bon jeu !");
             }
             case "Jeu du vrai ou faux" -> welcomeText.setText("Preparation du Quiz...");
             case "Jeu du Memory" -> welcomeText.setText("Mise en place des cartes...");
