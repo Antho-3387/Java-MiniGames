@@ -1,5 +1,6 @@
 package demo.teste.trueorfalse;
 
+import demo.teste.score.LocalBestScoreManager;
 import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -34,10 +35,14 @@ public class TrueOrFalseGamePane extends StackPane {
     private final Button falseButton = new Button("Faux");
     private final Button replayButton = new Button("Rejouer");
     private final PauseTransition nextQuestionDelay = new PauseTransition(NEXT_QUESTION_DELAY);
+    private final LocalBestScoreManager scoreManager =
+            new LocalBestScoreManager("trueorfalse-best-score.txt", "TrueOrFalseScoreManager");
 
     private int currentQuestionIndex;
     private int score;
+    private int bestScore;
     private boolean gameFinished;
+    private boolean scoreSaved;
 
     public TrueOrFalseGamePane() {
         setFocusTraversable(true);
@@ -141,7 +146,9 @@ public class TrueOrFalseGamePane extends StackPane {
         nextQuestionDelay.stop();
         currentQuestionIndex = 0;
         score = 0;
+        bestScore = scoreManager.chargerMeilleurScore();
         gameFinished = false;
+        scoreSaved = false;
 
         feedbackLabel.setText("");
         endLabel.setVisible(false);
@@ -160,8 +167,8 @@ public class TrueOrFalseGamePane extends StackPane {
         }
 
         Question question = questions.get(currentQuestionIndex);
-        progressLabel.setText("Question " + (currentQuestionIndex + 1) + " / " + questions.size());
         scoreLabel.setText("Score: " + score);
+        progressLabel.setText("Question " + (currentQuestionIndex + 1) + " / " + questions.size() + "  |  Record: " + bestScore);
         questionLabel.setText(question.getTexte());
         feedbackLabel.setText("");
     }
@@ -208,6 +215,11 @@ public class TrueOrFalseGamePane extends StackPane {
 
         feedbackLabel.setTextFill(Color.web("#fbbf24"));
         feedbackLabel.setText("Quiz termine !");
+        if (!scoreSaved) {
+            scoreSaved = true;
+            scoreManager.sauvegarderMeilleurScore(score);
+            bestScore = scoreManager.chargerMeilleurScore();
+        }
         endLabel.setText("Score final : " + score + " / " + (questions.size() * 10));
         endLabel.setVisible(true);
         endLabel.setManaged(true);

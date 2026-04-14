@@ -42,6 +42,7 @@ public class RoadRushGamePane extends StackPane {
     private final Canvas canvas = new Canvas(WIDTH, HEIGHT);
     private final GraphicsContext gc = canvas.getGraphicsContext2D();
     private final Random random = new Random();
+    private final RoadRushScoreManager scoreManager = new RoadRushScoreManager();
 
     private final Image playerNeutral = loadImage("/img/cars/Cars_Position_Neutre.png");
     private final Image playerLeft = loadImage("/img/cars/Cars_Position_Left.png");
@@ -61,7 +62,9 @@ public class RoadRushGamePane extends StackPane {
     private double spawnCooldown;
     private double elapsedSeconds;
     private int score;
+    private int bestScore;
     private boolean gameOver;
+    private boolean scoreSaved;
     private long lastFrameNanos;
 
     private final AnimationTimer timer = new AnimationTimer() {
@@ -109,7 +112,9 @@ public class RoadRushGamePane extends StackPane {
         spawnCooldown = 0.8;
         elapsedSeconds = 0.0;
         score = 0;
+        bestScore = scoreManager.chargerMeilleurScore();
         gameOver = false;
+        scoreSaved = false;
         lastFrameNanos = 0L;
         draw();
     }
@@ -155,7 +160,7 @@ public class RoadRushGamePane extends StackPane {
             }
 
             if (playerBounds.intersects(object.getBounds())) {
-                gameOver = true;
+                onGameOver();
                 return;
             }
         }
@@ -307,9 +312,20 @@ public class RoadRushGamePane extends StackPane {
 
         gc.setFont(Font.font("System", FontWeight.BOLD, 16));
         gc.fillText("Survie: " + String.format("%.1f", elapsedSeconds) + " s", 16, 58);
+        gc.fillText("Record: " + bestScore, 16, 80);
 
         gc.setFont(Font.font("System", 14));
         gc.fillText("Controles: Gauche/Droite (ou Q/D) - R pour rejouer", 16, HEIGHT - 14);
+    }
+
+    private void onGameOver() {
+        gameOver = true;
+        if (scoreSaved) {
+            return;
+        }
+        scoreSaved = true;
+        scoreManager.sauvegarderMeilleurScore(score);
+        bestScore = scoreManager.chargerMeilleurScore();
     }
 
     private void drawGameOverOverlay() {

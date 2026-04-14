@@ -1,5 +1,6 @@
 package demo.teste.flappybird;
 
+import demo.teste.score.LocalBestScoreManager;
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -38,6 +39,8 @@ public class FlappyBirdGamePane extends StackPane {
     private final GraphicsContext gc = canvas.getGraphicsContext2D();
     private final Random random = new Random();
     private final List<PipePair> pipes = new ArrayList<>();
+    private final LocalBestScoreManager scoreManager =
+            new LocalBestScoreManager("flappybird-best-score.txt", "FlappyBirdScoreManager");
 
     private final Image background = loadImage("/img/flappybird/Bird_Background.jpg");
     private final Image birdFrame1 = loadImage("/img/flappybird/Bird_Frame_01.png");
@@ -52,7 +55,9 @@ public class FlappyBirdGamePane extends StackPane {
     private double spawnAccumulator;
     private double animationAccumulator;
     private int score;
+    private int bestScore;
     private boolean gameOver;
+    private boolean scoreSaved;
     private long lastFrameNanos;
 
     private final AnimationTimer timer = new AnimationTimer() {
@@ -97,7 +102,9 @@ public class FlappyBirdGamePane extends StackPane {
         spawnAccumulator = 0.0;
         animationAccumulator = 0.0;
         score = 0;
+        bestScore = scoreManager.chargerMeilleurScore();
         gameOver = false;
+        scoreSaved = false;
         lastFrameNanos = 0L;
         pipes.clear();
         pipes.add(createPipe(WIDTH + 140.0));
@@ -130,6 +137,7 @@ public class FlappyBirdGamePane extends StackPane {
             if (!pipe.scored && pipe.x + PIPE_WIDTH < BIRD_X) {
                 pipe.scored = true;
                 score++;
+                updateBestScoreIfNeeded();
             }
 
             if (pipe.x + PIPE_WIDTH < -20.0) {
@@ -138,13 +146,13 @@ public class FlappyBirdGamePane extends StackPane {
             }
 
             if (intersects(birdBounds, pipe)) {
-                gameOver = true;
+                onGameOver();
                 return;
             }
         }
 
         if (birdY < 0.0 || birdY + BIRD_SIZE > HEIGHT) {
-            gameOver = true;
+            onGameOver();
         }
     }
 
@@ -260,9 +268,29 @@ public class FlappyBirdGamePane extends StackPane {
         gc.setFill(Color.WHITE);
         gc.setFont(Font.font("System", FontWeight.BOLD, 26));
         gc.fillText("Score: " + score, 16, 34);
+        gc.setFont(Font.font("System", FontWeight.BOLD, 18));
+        gc.fillText("Record: " + bestScore, 16, 58);
 
         gc.setFont(Font.font("System", FontWeight.BOLD, 16));
         gc.fillText("Espace / clic = voler", 16, HEIGHT - 18);
+    }
+
+    private void onGameOver() {
+        gameOver = true;
+        if (scoreSaved) {
+            return;
+        }
+        scoreSaved = true;
+        scoreManager.sauvegarderMeilleurScore(score);
+        bestScore = scoreManager.chargerMeilleurScore();
+    }
+
+    private void updateBestScoreIfNeeded() {
+        if (score <= bestScore) {
+            return;
+        }
+        bestScore = score;
+        scoreManager.sauvegarderMeilleurScore(bestScore);
     }
 
     private void drawGameOverOverlay() {

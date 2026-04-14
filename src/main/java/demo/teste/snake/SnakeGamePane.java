@@ -1,5 +1,6 @@
 package demo.teste.snake;
 
+import demo.teste.score.LocalBestScoreManager;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -34,6 +35,8 @@ public class SnakeGamePane extends StackPane {
     private final Set<Cell> obstacles = new HashSet<>();
     private final Random random = new Random();
     private final SnakeDifficulty difficulty;
+    private final LocalBestScoreManager scoreManager =
+            new LocalBestScoreManager("snake-best-score.txt", "SnakeScoreManager");
 
     private final Image snakeHead = loadImage("/img/snake/snake_head.png");
     private final Image snakeBody = loadImage("/img/snake/snake_body.png");
@@ -49,7 +52,9 @@ public class SnakeGamePane extends StackPane {
     private Direction nextDirection = Direction.RIGHT;
     private Cell food;
     private int score;
+    private int bestScore;
     private boolean gameOver;
+    private boolean scoreSaved;
     private long lastTick;
 
     private final AnimationTimer timer = new AnimationTimer() {
@@ -101,7 +106,9 @@ public class SnakeGamePane extends StackPane {
         direction = Direction.RIGHT;
         nextDirection = Direction.RIGHT;
         score = 0;
+        bestScore = scoreManager.chargerMeilleurScore();
         gameOver = false;
+        scoreSaved = false;
         lastTick = 0L;
         if (hasObstacles()) {
             initObstacles();
@@ -125,7 +132,7 @@ public class SnakeGamePane extends StackPane {
         Cell next = move(head, direction);
 
         if (isWall(next) || isObstacle(next) || snake.contains(next)) {
-            gameOver = true;
+            onGameOver();
             return;
         }
 
@@ -133,6 +140,7 @@ public class SnakeGamePane extends StackPane {
 
         if (next.equals(food)) {
             score += 10;
+            updateBestScoreIfNeeded();
             food = spawnFood();
         } else {
             snake.removeLast();
@@ -230,8 +238,27 @@ public class SnakeGamePane extends StackPane {
         gc.fillText("Score: " + score, 12, 28);
         gc.setFont(Font.font("System", FontWeight.BOLD, 16));
         gc.fillText("Niveau: " + difficulty.getLabel(), 12, 50);
+        gc.fillText("Record: " + bestScore, 12, 72);
         gc.setFont(Font.font("System", 14));
         gc.fillText("Controles: Fleches/WASD - R pour rejouer", 12, canvas.getHeight() - 12);
+    }
+
+    private void onGameOver() {
+        gameOver = true;
+        if (scoreSaved) {
+            return;
+        }
+        scoreSaved = true;
+        scoreManager.sauvegarderMeilleurScore(score);
+        bestScore = scoreManager.chargerMeilleurScore();
+    }
+
+    private void updateBestScoreIfNeeded() {
+        if (score <= bestScore) {
+            return;
+        }
+        bestScore = score;
+        scoreManager.sauvegarderMeilleurScore(bestScore);
     }
 
     private void drawGameOver() {

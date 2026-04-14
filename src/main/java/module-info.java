@@ -1,6 +1,7 @@
 module demo.teste {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.sql;
 
 
     opens demo.teste to javafx.fxml;
